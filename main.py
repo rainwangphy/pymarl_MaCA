@@ -16,7 +16,7 @@ from pymarl_src.utils.logging import get_logger
 SETTINGS['CAPTURE_MODE'] = "no"  # set to "no" if you want to see stdout/stderr in console
 logger = get_logger()
 
-ex = Experiment("pymarl")
+ex = Experiment("pymarl_MaCA")
 ex.logger = logger
 ex.captured_out_filter = apply_backspaces_and_linefeeds
 

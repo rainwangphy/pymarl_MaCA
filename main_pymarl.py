@@ -10,7 +10,7 @@ from sacred import Experiment, SETTINGS
 from sacred.observers import FileStorageObserver
 from sacred.utils import apply_backspaces_and_linefeeds
 
-from run import run
+from run_maca import run
 from pymarl_src.utils.logging import get_logger
 
 SETTINGS['CAPTURE_MODE'] = "no"  # set to "no" if you want to see stdout/stderr in console
@@ -73,7 +73,7 @@ def config_copy(config):
 
 if __name__ == '__main__':
 
-    params = ['src/main.py', '--config=qmix', '--env-config=sc2', 'with', 'env_args.map_name=2s3z']
+    params = ['--config=qmix', '--env-config=sc2', 'env_args.map_name=2s3z']
 
     # Get the defaults from default.yaml
     with open(os.path.join(os.path.dirname(__file__), "pymarl_src", "config", "default.yaml"), "r") as f:

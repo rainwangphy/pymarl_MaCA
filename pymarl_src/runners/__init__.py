@@ -1,6 +1,6 @@
 REGISTRY = {}
 
-from .episode_runner import EpisodeRunner
+from .episode_runner_maca import EpisodeRunner
 
 REGISTRY["episode"] = EpisodeRunner
 

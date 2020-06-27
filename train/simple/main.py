@@ -4,7 +4,7 @@
 @author: Gao Fang
 @contact: gaofang@cetc.com.cn
 @software: PyCharm
-@file: main.py
+@file: main_pymarl.py
 @time: 2018/7/25 0025 10:01
 @desc: 
 """

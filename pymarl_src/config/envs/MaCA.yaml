@@ -1,0 +1,18 @@
+env: MaCA
+
+env_args:
+  RENDER: True
+  MAX_EPOCH: 1000
+  BATCH_SIZE: 200
+  DETECTOR_NUM: 0
+  FIGHTER_NUM: 10
+  COURSE_NUM: 16
+  ATTACK_IND_NUM: (DETECTOR_NUM + FIGHTER_NUM) * 2 + 1  # long missile attack + short missile attack + no attack
+  ACTION_NUM: COURSE_NUM * ATTACK_IND_NUM
+
+
+LR: 0.01  # learning rate
+EPSILON: 0.9  # greedy policy
+GAMMA: 0.9  # reward discount
+TARGET_REPLACE_ITER: 100  # target update frequency
+LEARN_INTERVAL: 100

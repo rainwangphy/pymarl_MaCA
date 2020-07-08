@@ -97,12 +97,10 @@ class EpisodeRunner:
     def env_get_state(self):
         return
 
-    # def env_get_avail_actions(self):
-    #     red_detector_num, red_fighter_num, blue_detector_num, blue_fighter_num = self.env.get_unit_num()
-    #     red_obs_dict, blue_obs_dict = self.env.get_obs()
-    #     available_action = np.zeros(red_fighter_num, ACTION_NUM)
-    #
-    #     return
+    def env_get_avail_actions(self):
+        red_detector_num, red_fighter_num, blue_detector_num, blue_fighter_num = self.env.get_unit_num()
+        available_action = np.ones((red_fighter_num, ACTION_NUM))
+        return available_action.tolist()
 
     def run(self, test_mode=False):
         self.reset()
@@ -123,21 +121,32 @@ class EpisodeRunner:
 
             red_fighter_action = []
             obs_list = []
-            avail_actions = []
-            action_list = []  # TODO: obtained based on the alive or not alive
+            avail_actions = [self.env_get_avail_actions()]
+            action_list = []
             # get red action
             obs_got_ind = [False] * red_fighter_num
             for y in range(red_fighter_num):
-                true_action = np.array([0, 1, 0, 0], dtype=np.int32)
                 tmp_img_obs = red_obs_dict['fighter'][y]['screen']
                 tmp_img_obs = tmp_img_obs.transpose(2, 0, 1)
+                tmp_img_obs = tmp_img_obs.reshape(-1)  # Transform the image into a vector ####!!!!!!!!!!!!!!!!!!
                 tmp_info_obs = red_obs_dict['fighter'][y]['info']
                 obs_list.append({'screen': copy.deepcopy(tmp_img_obs), 'info': copy.deepcopy(tmp_info_obs)})
+
+            pre_transition_data = {
+                "state": [self.env_get_state()],
+                "avail_actions": [avail_actions],
+                "obs": [obs_list]
+            }
+
+            self.batch.update(pre_transition_data, ts=self.t)
+
+            actions = self.mac.select_actions(self.batch, t_ep=self.t, t_env=self.t_env, test_mode=test_mode)
+            for y in range(red_fighter_num):
                 # print(tmp_img_obs)
+                true_action = np.array([0, 1, 0, 0], dtype=np.int32)
                 if red_obs_dict['fighter'][y]['alive']:
                     obs_got_ind[y] = True
-                    # TODO: obtain action from MAC
-                    tmp_action = fighter_model.choose_action(tmp_img_obs)
+                    tmp_action = actions[y]
                     action_list.append(tmp_action)
                     # action formation
                     true_action[0] = int(360 / COURSE_NUM * int(tmp_action[0] / ATTACK_IND_NUM))
@@ -149,13 +158,6 @@ class EpisodeRunner:
                 red_fighter_action.append(true_action)
             red_fighter_action = np.array(red_fighter_action)
 
-            pre_transition_data = {
-                "state": [self.env_get_state()],
-                "avail_actions": [avail_actions],
-                "obs": [obs_list]
-            }
-
-            self.batch.update(pre_transition_data, ts=self.t)
             # step
             # reward, terminated, env_info = self.env.step(actions[0])
             self.env.step(red_detector_action, red_fighter_action, blue_detector_action, blue_fighter_action)

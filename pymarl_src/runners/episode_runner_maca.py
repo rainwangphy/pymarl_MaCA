@@ -45,7 +45,7 @@ class EpisodeRunner:
         self.blue_agent.set_map_info(size_x, size_y, blue_detector_num, blue_fighter_num)
 
         # self.env = env_REGISTRY[self.args.env](**self.args.env_args)
-        self.episode_limit = 5000  # Following the number used in MaCA
+        self.episode_limit = 10  # Following the number used in MaCA
         self.t = 0
 
         self.t_env = 0

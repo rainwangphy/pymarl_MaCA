@@ -70,6 +70,7 @@ class EpisodeBatch:
             else:
                 shape = vshape
 
+            # self.data.episode_data[field_key] = th.zeros((batch_size, *shape), dtype=dtype, device=self.device)
             if episode_const:
                 self.data.episode_data[field_key] = th.zeros((batch_size, *shape), dtype=dtype, device=self.device)
             else:
